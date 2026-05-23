@@ -123,20 +123,19 @@ function render() {
 
   const canvas = document.getElementById("canvas");
 
-  // ================= HEADER (FIXED POSITION + SIZE + NO SHADOW)
+  // ================= HEADER (FINE TUNE FIX)
 const headerBox = document.getElementById("headerBox");
 headerBox.innerHTML = "";
 
-// posisi lebih turun + lebih besar (mirip HEADER.y = 200 di canvas kamu)
 const baseHeader = document.createElement("div");
 
 baseHeader.style.position = "absolute";
-baseHeader.style.top = "70px";          // 👈 lebih kebawah
+baseHeader.style.top = "50px";        // 👈 sebelumnya terlalu atas, sekarang turun sedikit dari default
 baseHeader.style.left = "0";
 baseHeader.style.width = "100%";
 
-baseHeader.style.fontSize = "44px";     // 👈 lebih besar (fix)
-baseHeader.style.fontWeight = "700";    // jangan terlalu bold biar mirip Nokia font
+baseHeader.style.fontSize = "40px";   // 👈 naik sedikit dari 34 → biar lebih “nokia feel”
+baseHeader.style.fontWeight = "700";
 baseHeader.style.color = "#E8F0F0";
 baseHeader.style.textAlign = "center";
 baseHeader.style.fontFamily = "NokiaFont";
