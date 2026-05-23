@@ -3,199 +3,190 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Nokia Quote Generator Pro</title>
+<title>Nokia Quote Neo Brutal Rounded</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
-<!-- FONTS -->
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet"/>
 
 <style>
-body {
-  background:#0b0b0f;
+body{
+  background:#0b0b12;
   color:white;
 }
 
-/* container scaling wrapper */
-#stage {
+/* STAGE (NO SCALE BUG, FIXED SYSTEM) */
+#stage{
   width:1086px;
   height:1448px;
   position:relative;
   overflow:hidden;
-  transform:scale(0.45);
-  transform-origin:top left;
+  border-radius:32px;
+  box-shadow:18px 18px 0 black;
+  border:4px solid black;
 }
 
-/* background image */
-#bg {
+/* BACKGROUND */
+#bg{
   position:absolute;
   inset:0;
-  background-image:url("https://raw.githubusercontent.com/Ditzzx-vibecoder/Assets/main/Image/file_00000000a9f47208a295c9c984f92b7a.jpeg");
+  background:url("https://raw.githubusercontent.com/Ditzzx-vibecoder/Assets/main/Image/file_00000000a9f47208a295c9c984f92b7a.jpeg");
   background-size:cover;
 }
 
-/* particle canvas */
-canvas#particles {
+/* PARTICLES */
+canvas{
   position:absolute;
   inset:0;
   z-index:1;
 }
 
-/* content layer */
-#content {
+/* CONTENT */
+#content{
   position:absolute;
   inset:0;
   z-index:2;
 }
 
-/* card feel (NEO BUT CLEAN) */
-.neo {
-  position:absolute;
+/* NEO BRUTAL SOFT CARD STYLE */
+.neo{
+  border-radius:28px;
   border:4px solid black;
   box-shadow:10px 10px 0 black;
   background:rgba(255,255,255,0.92);
 }
+
+/* FLOAT ANIMATION */
+.float{
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-8px);}
+}
 </style>
 </head>
 
-<body class="p-6">
-
-<div class="flex gap-6">
+<body class="p-6 flex gap-6">
 
 <!-- CONTROL -->
-<div class="w-[320px] space-y-3">
-  <div class="neo p-3 text-black">
-    <div class="font-bold mb-2">CONTROL</div>
+<div class="w-[300px] space-y-2 neo p-3 text-black">
+  <input id="h" class="w-full border p-2" value="Ditzzx"/>
+  <textarea id="p" class="w-full border p-2 h-32">
+Jangan pernah menyerah pada impianmu hanya karena prosesnya terasa lama...
+  </textarea>
 
-    <input id="header" class="w-full border p-2 mb-2 text-black" value="Ditzzx"/>
+  <input id="s" class="w-full border p-2" value="Ditzzx"/>
+  <input id="d" class="w-full border p-2" value="02/05/2026"/>
+  <input id="t" class="w-full border p-2" value="11:28"/>
 
-    <textarea id="pesan" class="w-full border p-2 h-32 text-black">
-Jangan pernah menyerah pada impianmu hanya karena prosesnya terasa lama dan melelahkan...
-    </textarea>
+  <button onclick="render()" class="w-full bg-black text-white p-2 rounded-xl mt-2">
+    Render
+  </button>
 
-    <input id="sender" class="w-full border p-2 mt-2 text-black" value="Ditzzx"/>
-    <input id="date" class="w-full border p-2 mt-2 text-black" value="02/05/2026"/>
-    <input id="time" class="w-full border p-2 mt-2 text-black" value="11:28"/>
-
-    <button onclick="render()" class="w-full mt-3 bg-black text-white p-2">
-      Render
-    </button>
-
-    <button onclick="download()" class="w-full mt-2 bg-white text-black p-2 border">
-      Download PNG
-    </button>
-  </div>
+  <button onclick="download()" class="w-full bg-white text-black p-2 rounded-xl border">
+    Download
+  </button>
 </div>
 
 <!-- STAGE -->
-<div class="neo">
-  <div id="stage">
+<div id="stage">
 
-    <div id="bg"></div>
-    <canvas id="particles"></canvas>
+  <div id="bg"></div>
+  <canvas id="pt"></canvas>
 
-    <div id="content">
+  <div id="content">
 
-      <!-- HEADER (SAMA PERSIS COORD SCRAPER) -->
-      <div id="headerBox"
-        style="position:absolute; left:543px; top:200px; transform:translate(-50%,-50%); font-size:130px; font-family:'Archivo Black'; color:#E8F0F0;">
-      </div>
+    <!-- HEADER (SCRAPER EXACT POSITION) -->
+    <div id="header"
+      style="position:absolute; left:543px; top:200px;
+      transform:translate(-50%,-50%);
+      font-family:'Archivo Black';
+      font-size:130px;
+      color:#E8F0F0;"
+      class="float">
+    </div>
 
-      <!-- PESAN -->
-      <div id="pesanBox"
-        style="position:absolute; left:30px; top:300px; width:1000px; font-family:'Space Grotesk'; font-size:63px; line-height:110px; color:black;">
-      </div>
+    <!-- BODY -->
+    <div id="body"
+      style="position:absolute; left:30px; top:300px;
+      width:1020px;
+      font-family:'Space Grotesk';
+      font-size:63px;
+      line-height:110px;
+      color:black;">
+    </div>
 
-      <!-- INFO -->
-      <div id="infoBox"
-        style="position:absolute; left:30px; top:980px; font-family:'Space Grotesk'; font-size:48px; color:black;">
-      </div>
-
+    <!-- INFO -->
+    <div id="info"
+      style="position:absolute; left:30px; top:980px;
+      font-family:'Space Grotesk';
+      font-size:48px;
+      color:black;">
     </div>
 
   </div>
 </div>
 
-</div>
-
 <script>
-/* ================= PARTICLES BACKGROUND ================= */
-const canvas = document.getElementById("particles");
-const ctx = canvas.getContext("2d");
 
-function resize(){
-  canvas.width = 1086;
-  canvas.height = 1448;
-}
-resize();
+/* ================= PARTICLE ================= */
+const c=document.getElementById("pt");
+const x=c.getContext("2d");
+c.width=1086;c.height=1448;
 
-let particles = Array.from({length:40},()=>({
+let p=Array.from({length:35},()=>({
   x:Math.random()*1086,
   y:Math.random()*1448,
   r:Math.random()*6+2,
-  dx:(Math.random()-0.5)*1,
-  dy:(Math.random()-0.5)*1
+  dx:(Math.random()-0.5)*1.2,
+  dy:(Math.random()-0.5)*1.2
 }));
 
-function animate(){
-  ctx.clearRect(0,0,1086,1448);
+function anim(){
+  x.clearRect(0,0,1086,1448);
+  for(let i of p){
+    i.x+=i.dx;i.y+=i.dy;
+    if(i.x<0||i.x>1086)i.dx*=-1;
+    if(i.y<0||i.y>1448)i.dy*=-1;
 
-  for(let p of particles){
-    p.x += p.dx;
-    p.y += p.dy;
-
-    if(p.x<0||p.x>1086) p.dx*=-1;
-    if(p.y<0||p.y>1448) p.dy*=-1;
-
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle="rgba(255,255,255,0.15)";
-    ctx.fill();
+    x.beginPath();
+    x.arc(i.x,i.y,i.r,0,Math.PI*2);
+    x.fillStyle="rgba(255,255,255,0.15)";
+    x.fill();
   }
-
-  requestAnimationFrame(animate);
+  requestAnimationFrame(anim);
 }
-animate();
+anim();
 
-/* ================= SCRAPER LOGIC (1:1 STYLE) ================= */
-
-function wrap(text, max=38){
-  const words=text.split(" ");
-  let line="",out=[];
-  for(let w of words){
-    let test=line?line+" "+w:w;
-    if(test.length>max){ out.push(line); line=w; }
-    else line=test;
+/* ================= SCRAPER STYLE LOGIC ================= */
+function wrap(t,n=45){
+  let w=t.split(" "),l="",r=[];
+  for(let i of w){
+    let c=l?l+" "+i:i;
+    if(c.length>n){r.push(l);l=i;}
+    else l=c;
   }
-  if(line) out.push(line);
-  return out;
+  if(l)r.push(l);
+  return r;
 }
 
 function render(){
 
-  const HEADER={
-    text:document.getElementById("header").value
-  };
+  document.getElementById("header").innerText =
+    document.getElementById("h").value;
 
-  const PESAN=document.getElementById("pesan").value;
-  const INFO={
-    sender:document.getElementById("sender").value,
-    date:document.getElementById("date").value,
-    time:document.getElementById("time").value
-  };
+  const lines = wrap(document.getElementById("p").value,45);
 
-  /* HEADER (exact position like scraper) */
-  document.getElementById("headerBox").innerText=HEADER.text;
+  document.getElementById("body").innerHTML =
+    lines.map(v=>`<div>${v}</div>`).join("");
 
-  /* PESAN (wrap like canvas logic simplified) */
-  const lines=wrap(PESAN,45);
-  document.getElementById("pesanBox").innerHTML=
-    lines.map(l=>`<div>${l}</div>`).join("");
-
-  /* INFO */
-  document.getElementById("infoBox").innerHTML=
-    `Dari: ${INFO.sender}<br>${INFO.date}<br>${INFO.time}`;
+  document.getElementById("info").innerHTML =
+    `Dari: ${document.getElementById("s").value}<br>
+     ${document.getElementById("d").value}<br>
+     ${document.getElementById("t").value}`;
 }
 
 /* ================= EXPORT ================= */
