@@ -123,28 +123,19 @@ function render() {
 
   const canvas = document.getElementById("canvas");
 
-  // ================= HEADER (FINE TUNE FIX)
-const headerBox = document.getElementById("headerBox");
-headerBox.innerHTML = "";
+  // ================= HEADER (FIXED fake bold, no stacking bug)
+  const headerBox = document.getElementById("headerBox");
+  headerBox.innerHTML = "";
 
-// posisi & ukuran DIAM sama seperti versi sebelumnya
-const baseHeader = document.createElement("div");
+  const baseHeader = document.createElement("div");
+  baseHeader.style.position = "relative";
+  baseHeader.style.fontSize = "34px";
+  baseHeader.style.fontWeight = "900";
+  baseHeader.style.color = "#E8F0F0";
+  baseHeader.style.textAlign = "center";
+  baseHeader.innerText = header;
 
-baseHeader.style.position = "absolute";
-baseHeader.style.top = "30px";   // 🔒 tetap seperti sebelumnya
-baseHeader.style.left = "0";
-baseHeader.style.width = "100%";
-
-baseHeader.style.fontSize = "34px";  // 🔒 tetap
-baseHeader.style.fontWeight = "bold";
-baseHeader.style.color = "#E8F0F0";
-baseHeader.style.textAlign = "center";
-baseHeader.style.fontFamily = "NokiaFont";
-baseHeader.style.letterSpacing = "1px";
-
-baseHeader.innerText = header;
-
-headerBox.appendChild(baseHeader);
+  headerBox.appendChild(baseHeader);
 
   // ================= BODY (AUTO SCALE LIKE CANVAS)
   const pesanBox = document.getElementById("pesanBox");
