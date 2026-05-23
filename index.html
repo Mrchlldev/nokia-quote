@@ -94,13 +94,14 @@ Jangan pernah menyerah pada impianmu hanya karena prosesnya terasa lama...
   </div>
 
 <script>
-function wrapText(text, maxChars = 35) {
+function wrapText(text, maxChars = 38) {
   const words = text.split(" ");
   let lines = [];
   let line = "";
 
   for (let w of words) {
-    let test = line + " " + w;
+    const test = line ? line + " " + w : w;
+
     if (test.length > maxChars) {
       lines.push(line);
       line = w;
@@ -108,6 +109,7 @@ function wrapText(text, maxChars = 35) {
       line = test;
     }
   }
+
   if (line) lines.push(line);
   return lines;
 }
@@ -119,31 +121,58 @@ function render() {
   const date = document.getElementById("date").value;
   const time = document.getElementById("time").value;
 
-  // HEADER fake bold effect
+  const canvas = document.getElementById("canvas");
+
+  // ================= HEADER (FIXED fake bold, no stacking bug)
   const headerBox = document.getElementById("headerBox");
   headerBox.innerHTML = "";
-  for (let i = 0; i < 4; i++) {
-    const span = document.createElement("div");
-    span.style.position = "absolute";
-    span.style.left = (50 + i) + "%";
-    span.style.transform = "translateX(-50%)";
-    span.style.color = "#E8F0F0";
-    span.style.fontSize = "28px";
-    span.innerText = header;
-    headerBox.appendChild(span);
+
+  const baseHeader = document.createElement("div");
+  baseHeader.style.position = "relative";
+  baseHeader.style.fontSize = "34px";
+  baseHeader.style.fontWeight = "900";
+  baseHeader.style.color = "#E8F0F0";
+  baseHeader.style.textAlign = "center";
+  baseHeader.style.textShadow = "2px 0 black";
+  baseHeader.innerText = header;
+
+  headerBox.appendChild(baseHeader);
+
+  // ================= BODY (AUTO SCALE LIKE CANVAS)
+  const pesanBox = document.getElementById("pesanBox");
+
+  const lines = wrapText(pesan, 42);
+
+  // auto font size logic (mirip getFitFontSize)
+  let fontSize = 22;
+  const maxLines = 10;
+
+  if (lines.length > maxLines) {
+    fontSize = 16;
+  } else if (lines.length > 6) {
+    fontSize = 18;
   }
 
-  // PESAN wrap
-  const pesanBox = document.getElementById("pesanBox");
-  pesanBox.innerHTML = wrapText(pesan, 40)
-    .map(l => `<div>${l}</div>`)
-    .join("");
+  pesanBox.style.fontSize = fontSize + "px";
+  pesanBox.style.lineHeight = (fontSize * 1.4) + "px";
 
-  // INFO
-  document.getElementById("infoBox").innerHTML = `
+  pesanBox.innerHTML = lines.map(l => `<div>${l}</div>`).join("");
+
+  // ================= FOOTER (FIXED positioning relative to body)
+  const infoBox = document.getElementById("infoBox");
+
+  infoBox.style.position = "absolute";
+
+  // penting: jangan bottom fixed, tapi relative dari content
+  const baseTop = 480 - 120; // bukan hard bottom lagi
+
+  infoBox.style.top = baseTop + "px";
+  infoBox.style.left = "20px";
+  infoBox.style.right = "20px";
+
+  infoBox.innerHTML = `
     <div>Dari: ${sender}</div>
-    <div>${date}</div>
-    <div>${time}</div>
+    <div>${date} • ${time}</div>
   `;
 }
 
@@ -161,9 +190,7 @@ async function download() {
   link.click();
 }
 
-// auto render pertama
 render();
 </script>
-
 </body>
 </html>
