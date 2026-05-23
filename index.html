@@ -1,209 +1,246 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Nokia Quote Neo Brutal Rounded</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nokia Quote Generator</title>
 
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    @font-face {
+      font-family: "FontHeader";
+      src: url("https://raw.githubusercontent.com/Ditzzx-vibecoder/Assets/main/Font/nokia-6000-series-medium.ttf");
+    }
+    @font-face {
+      font-family: "FontPesan";
+      src: url("https://raw.githubusercontent.com/Ditzzx-vibecoder/Assets/main/Font/nokia-6000-series-medium.ttf");
+    }
+    @font-face {
+      font-family: "FontInfo";
+      src: url("https://raw.githubusercontent.com/Ditzzx-vibecoder/Assets/main/Font/nokia-6000-series-medium.ttf");
+    }
 
-<style>
-body{
-  background:#0b0b12;
-  color:white;
-}
+    body {
+      font-family: system-ui;
+    }
 
-/* STAGE (NO SCALE BUG, FIXED SYSTEM) */
-#stage{
-  width:1086px;
-  height:1448px;
-  position:relative;
-  overflow:hidden;
-  border-radius:32px;
-  box-shadow:18px 18px 0 black;
-  border:4px solid black;
-}
-
-/* BACKGROUND */
-#bg{
-  position:absolute;
-  inset:0;
-  background:url("https://raw.githubusercontent.com/Ditzzx-vibecoder/Assets/main/Image/file_00000000a9f47208a295c9c984f92b7a.jpeg");
-  background-size:cover;
-}
-
-/* PARTICLES */
-canvas{
-  position:absolute;
-  inset:0;
-  z-index:1;
-}
-
-/* CONTENT */
-#content{
-  position:absolute;
-  inset:0;
-  z-index:2;
-}
-
-/* NEO BRUTAL SOFT CARD STYLE */
-.neo{
-  border-radius:28px;
-  border:4px solid black;
-  box-shadow:10px 10px 0 black;
-  background:rgba(255,255,255,0.92);
-}
-
-/* FLOAT ANIMATION */
-.float{
-  animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float{
-  0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-8px);}
-}
-</style>
+    .neo {
+      border: 4px solid black;
+      box-shadow: 6px 6px 0 black;
+      border-radius: 16px;
+    }
+  </style>
 </head>
 
-<body class="p-6 flex gap-6">
+<body class="bg-yellow-200">
 
-<!-- CONTROL -->
-<div class="w-[300px] space-y-2 neo p-3 text-black">
-  <input id="h" class="w-full border p-2" value="Ditzzx"/>
-  <textarea id="p" class="w-full border p-2 h-32">
-Jangan pernah menyerah pada impianmu hanya karena prosesnya terasa lama...
-  </textarea>
+<!-- NAVBAR -->
+<nav class="p-4 bg-white neo m-4 flex justify-between items-center">
+  <h1 class="font-bold text-xl">📟 Nokia Quote Generator</h1>
+</nav>
 
-  <input id="s" class="w-full border p-2" value="Ditzzx"/>
-  <input id="d" class="w-full border p-2" value="02/05/2026"/>
-  <input id="t" class="w-full border p-2" value="11:28"/>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
 
-  <button onclick="render()" class="w-full bg-black text-white p-2 rounded-xl mt-2">
-    Render
-  </button>
+  <!-- INPUT CARD -->
+  <div class="bg-white neo p-4 space-y-3">
 
-  <button onclick="download()" class="w-full bg-white text-black p-2 rounded-xl border">
-    Download
-  </button>
-</div>
+    <input id="headerText" class="w-full border p-2 rounded" placeholder="Nama Header" value="Ditzzx"/>
 
-<!-- STAGE -->
-<div id="stage">
+    <textarea id="pesanText" class="w-full border p-2 rounded h-40">
+Jangan pernah menyerah pada impianmu hanya karena prosesnya terasa lama dan melelahkan, karena semua yang besar selalu dimulai dari langkah kecil yang konsisten setiap harinya tanpa terkecuali meski tidak ada yang melihat perjuanganmu..
+    </textarea>
 
-  <div id="bg"></div>
-  <canvas id="pt"></canvas>
+    <input id="sender" class="w-full border p-2 rounded" placeholder="Sender" value="Ditzzx"/>
 
-  <div id="content">
+    <input id="tanggal" class="w-full border p-2 rounded" value="02/05/2026"/>
 
-    <!-- HEADER (SCRAPER EXACT POSITION) -->
-    <div id="header"
-      style="position:absolute; left:543px; top:200px;
-      transform:translate(-50%,-50%);
-      font-family:'Archivo Black';
-      font-size:130px;
-      color:#E8F0F0;"
-      class="float">
-    </div>
+    <input id="jam" class="w-full border p-2 rounded" value="11:28"/>
 
-    <!-- BODY -->
-    <div id="body"
-      style="position:absolute; left:30px; top:300px;
-      width:1020px;
-      font-family:'Space Grotesk';
-      font-size:63px;
-      line-height:110px;
-      color:black;">
-    </div>
+    <button onclick="render()" class="bg-black text-white px-4 py-2 rounded w-full">
+      Generate
+    </button>
 
-    <!-- INFO -->
-    <div id="info"
-      style="position:absolute; left:30px; top:980px;
-      font-family:'Space Grotesk';
-      font-size:48px;
-      color:black;">
-    </div>
+    <button onclick="downloadImage()" class="bg-green-600 text-white px-4 py-2 rounded w-full">
+      Download PNG
+    </button>
 
   </div>
+
+  <!-- RESULT CARD -->
+  <div class="bg-white neo p-4 flex justify-center items-center">
+
+    <div id="canvasWrap" class="relative"
+      style="width: 360px; transform: scale(0.4); transform-origin: top left;">
+
+      <!-- SIMULASI CANVAS 1086x1448 -->
+      <div id="canvas"
+        style="
+          width:1086px;
+          height:1448px;
+          position:relative;
+          overflow:hidden;
+          background:url('https://raw.githubusercontent.com/Ditzzx-vibecoder/Assets/main/Image/file_00000000a9f47208a295c9c984f92b7a.jpeg');
+          background-size:cover;
+        ">
+
+        <!-- HEADER -->
+        <div id="header"
+          style="
+            position:absolute;
+            left:543px;
+            top:200px;
+            transform:translate(-50%,-50%);
+            font-family:FontHeader;
+            font-size:130px;
+            color:#E8F0F0;
+          ">
+        </div>
+
+        <!-- PESAN -->
+        <div id="pesan"
+          style="
+            position:absolute;
+            left:30px;
+            top:300px;
+            width:1026px;
+            font-family:FontPesan;
+            color:black;
+            white-space:pre-wrap;
+          ">
+        </div>
+
+        <!-- INFO -->
+        <div id="info"
+          style="
+            position:absolute;
+            left:30px;
+            top:980px;
+            font-family:FontInfo;
+            color:black;
+            font-size:48px;
+          ">
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 </div>
 
+<!-- FOOTER -->
+<footer class="m-4 p-4 bg-white neo text-center">
+  Author: <b>Marcellino F.A</b>
+</footer>
+
 <script>
+const WIDTH = 1086;
+const HEIGHT = 1448;
 
-/* ================= PARTICLE ================= */
-const c=document.getElementById("pt");
-const x=c.getContext("2d");
-c.width=1086;c.height=1448;
+function setHeader(text){
+  const el = document.getElementById("header");
+  el.innerHTML = "";
 
-let p=Array.from({length:35},()=>({
-  x:Math.random()*1086,
-  y:Math.random()*1448,
-  r:Math.random()*6+2,
-  dx:(Math.random()-0.5)*1.2,
-  dy:(Math.random()-0.5)*1.2
-}));
-
-function anim(){
-  x.clearRect(0,0,1086,1448);
-  for(let i of p){
-    i.x+=i.dx;i.y+=i.dy;
-    if(i.x<0||i.x>1086)i.dx*=-1;
-    if(i.y<0||i.y>1448)i.dy*=-1;
-
-    x.beginPath();
-    x.arc(i.x,i.y,i.r,0,Math.PI*2);
-    x.fillStyle="rgba(255,255,255,0.15)";
-    x.fill();
+  for (let i = 0; i <= 4; i++) {
+    const span = document.createElement("div");
+    span.innerText = text;
+    span.style.position = "absolute";
+    span.style.left = i + "px";
+    span.style.top = "0px";
+    el.appendChild(span);
   }
-  requestAnimationFrame(anim);
 }
-anim();
 
-/* ================= SCRAPER STYLE LOGIC ================= */
-function wrap(t,n=45){
-  let w=t.split(" "),l="",r=[];
-  for(let i of w){
-    let c=l?l+" "+i:i;
-    if(c.length>n){r.push(l);l=i;}
-    else l=c;
+function wrapText(text, maxWidth, fontSize){
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  ctx.font = fontSize + "px FontPesan";
+
+  const words = text.split(" ");
+  let line = "";
+  const result = [];
+
+  for (let w of words) {
+    const test = line + " " + w;
+    if (ctx.measureText(test).width > maxWidth && line) {
+      result.push(line);
+      line = w;
+    } else {
+      line = test;
+    }
   }
-  if(l)r.push(l);
-  return r;
+
+  if (line) result.push(line);
+  return result;
+}
+
+function fitFontSize(textLines, maxHeight){
+  let fontSize = 63;
+  const lineHeightRatio = 110 / 63;
+
+  while (fontSize > 10) {
+    const lineHeight = fontSize * lineHeightRatio;
+    const wrapped = textLines.flatMap(l =>
+      wrapText(l, 1026, fontSize)
+    );
+
+    const totalH = wrapped.length * lineHeight;
+
+    if (totalH <= maxHeight) break;
+    fontSize--;
+  }
+
+  return fontSize;
 }
 
 function render(){
+  const header = document.getElementById("headerText").value;
+  const pesanRaw = document.getElementById("pesanText").value;
+  const sender = document.getElementById("sender").value;
+  const tanggal = document.getElementById("tanggal").value;
+  const jam = document.getElementById("jam").value;
 
-  document.getElementById("header").innerText =
-    document.getElementById("h").value;
+  setHeader(header);
 
-  const lines = wrap(document.getElementById("p").value,45);
+  // PESAN
+  const pesanEl = document.getElementById("pesan");
+  const lines = pesanRaw.split("\n");
 
-  document.getElementById("body").innerHTML =
-    lines.map(v=>`<div>${v}</div>`).join("");
+  const fitSize = fitFontSize(lines, 700);
+  const lineHeight = fitSize * (110/63);
 
-  document.getElementById("info").innerHTML =
-    `Dari: ${document.getElementById("s").value}<br>
-     ${document.getElementById("d").value}<br>
-     ${document.getElementById("t").value}`;
+  const wrapped = lines.flatMap(l =>
+    wrapText(l, 1026, fitSize)
+  );
+
+  pesanEl.style.fontSize = fitSize + "px";
+  pesanEl.innerHTML = wrapped.map(l => `<div>${l}</div>`).join("");
+
+  // INFO
+  document.getElementById("info").innerHTML = `
+    Dari:<br>
+    ${sender}<br>
+    ${tanggal}<br>
+    ${jam}
+  `;
 }
 
-/* ================= EXPORT ================= */
-async function download(){
-  const el=document.getElementById("stage");
+async function downloadImage(){
+  const el = document.getElementById("canvas");
 
-  const canvas=await html2canvas(el,{
-    scale:2,
-    useCORS:true
+  const canvas = await html2canvas(el, {
+    scale: 2,
+    useCORS: true
   });
 
-  const a=document.createElement("a");
-  a.download="nokia-quote.png";
-  a.href=canvas.toDataURL("image/png");
-  a.click();
+  const link = document.createElement("a");
+  link.download = "nokia-quote.png";
+  link.href = canvas.toDataURL();
+  link.click();
 }
 
+// initial render
 render();
 </script>
 
