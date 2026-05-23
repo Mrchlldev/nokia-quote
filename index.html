@@ -1,195 +1,220 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Nokia Quote Generator</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nokia Quote Generator Pro</title>
 
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
-  <!-- html2canvas -->
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<!-- FONTS -->
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 
-  <style>
-    @font-face {
-      font-family: "NokiaFont";
-      src: url("https://raw.githubusercontent.com/Ditzzx-vibecoder/Assets/main/Font/nokia-6000-series-medium.ttf");
-    }
+<style>
+body {
+  background:#0b0b0f;
+  color:white;
+}
 
-    body {
-      font-family: sans-serif;
-      background: #f5f5f5;
-    }
+/* container scaling wrapper */
+#stage {
+  width:1086px;
+  height:1448px;
+  position:relative;
+  overflow:hidden;
+  transform:scale(0.45);
+  transform-origin:top left;
+}
 
-    .neo-box {
-      border: 4px solid black;
-      background: white;
-      box-shadow: 6px 6px 0 black;
-    }
+/* background image */
+#bg {
+  position:absolute;
+  inset:0;
+  background-image:url("https://raw.githubusercontent.com/Ditzzx-vibecoder/Assets/main/Image/file_00000000a9f47208a295c9c984f92b7a.jpeg");
+  background-size:cover;
+}
 
-    .canvas-area {
-      width: 360px;
-      height: 480px;
-      position: relative;
-      overflow: hidden;
-      border: 4px solid black;
-      box-shadow: 10px 10px 0 black;
-      background-size: cover;
-      background-position: center;
-      font-family: "NokiaFont";
-    }
-  </style>
+/* particle canvas */
+canvas#particles {
+  position:absolute;
+  inset:0;
+  z-index:1;
+}
+
+/* content layer */
+#content {
+  position:absolute;
+  inset:0;
+  z-index:2;
+}
+
+/* card feel (NEO BUT CLEAN) */
+.neo {
+  position:absolute;
+  border:4px solid black;
+  box-shadow:10px 10px 0 black;
+  background:rgba(255,255,255,0.92);
+}
+</style>
 </head>
 
 <body class="p-6">
 
-  <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-6">
+<div class="flex gap-6">
 
-    <!-- CONTROL PANEL -->
-    <div class="neo-box p-4 space-y-3">
-      <h1 class="text-xl font-bold">Nokia Quote Generator</h1>
+<!-- CONTROL -->
+<div class="w-[320px] space-y-3">
+  <div class="neo p-3 text-black">
+    <div class="font-bold mb-2">CONTROL</div>
 
-      <input id="header" class="w-full border-2 border-black p-2" placeholder="Header text" value="Ditzzx"/>
+    <input id="header" class="w-full border p-2 mb-2 text-black" value="Ditzzx"/>
 
-      <textarea id="pesan" class="w-full border-2 border-black p-2 h-28">
-Jangan pernah menyerah pada impianmu hanya karena prosesnya terasa lama...
-      </textarea>
+    <textarea id="pesan" class="w-full border p-2 h-32 text-black">
+Jangan pernah menyerah pada impianmu hanya karena prosesnya terasa lama dan melelahkan...
+    </textarea>
 
-      <input id="sender" class="w-full border-2 border-black p-2" value="Ditzzx"/>
-      <input id="date" class="w-full border-2 border-black p-2" value="02/05/2026"/>
-      <input id="time" class="w-full border-2 border-black p-2" value="11:28"/>
+    <input id="sender" class="w-full border p-2 mt-2 text-black" value="Ditzzx"/>
+    <input id="date" class="w-full border p-2 mt-2 text-black" value="02/05/2026"/>
+    <input id="time" class="w-full border p-2 mt-2 text-black" value="11:28"/>
 
-      <button onclick="render()" class="w-full neo-box p-2 font-bold">
-        Render Preview
-      </button>
+    <button onclick="render()" class="w-full mt-3 bg-black text-white p-2">
+      Render
+    </button>
 
-      <button onclick="download()" class="w-full neo-box p-2 font-bold bg-black text-white">
-        Download PNG
-      </button>
-    </div>
+    <button onclick="download()" class="w-full mt-2 bg-white text-black p-2 border">
+      Download PNG
+    </button>
+  </div>
+</div>
 
-    <!-- PREVIEW -->
-    <div class="flex justify-center items-start">
-      <div id="canvas" class="canvas-area" style="background-image:url('https://c.termai.cc/i145/DCbA6.jpg')">
+<!-- STAGE -->
+<div class="neo">
+  <div id="stage">
 
-        <!-- HEADER -->
-        <div id="headerBox"
-          style="position:absolute; top:30px; width:100%; text-align:center; font-size:28px; color:#E8F0F0; font-weight:bold;">
-        </div>
+    <div id="bg"></div>
+    <canvas id="particles"></canvas>
 
-        <!-- PESAN -->
-        <div id="pesanBox"
-          style="position:absolute; top:120px; left:20px; right:20px; font-size:16px; line-height:1.4; color:black;">
-        </div>
+    <div id="content">
 
-        <!-- INFO -->
-        <div id="infoBox"
-          style="position:absolute; bottom:40px; left:20px; font-size:14px;">
-        </div>
-
+      <!-- HEADER (SAMA PERSIS COORD SCRAPER) -->
+      <div id="headerBox"
+        style="position:absolute; left:543px; top:200px; transform:translate(-50%,-50%); font-size:130px; font-family:'Archivo Black'; color:#E8F0F0;">
       </div>
+
+      <!-- PESAN -->
+      <div id="pesanBox"
+        style="position:absolute; left:30px; top:300px; width:1000px; font-family:'Space Grotesk'; font-size:63px; line-height:110px; color:black;">
+      </div>
+
+      <!-- INFO -->
+      <div id="infoBox"
+        style="position:absolute; left:30px; top:980px; font-family:'Space Grotesk'; font-size:48px; color:black;">
+      </div>
+
     </div>
 
   </div>
+</div>
+
+</div>
 
 <script>
-function wrapText(text, maxChars = 38) {
-  const words = text.split(" ");
-  let lines = [];
-  let line = "";
+/* ================= PARTICLES BACKGROUND ================= */
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
 
-  for (let w of words) {
-    const test = line ? line + " " + w : w;
+function resize(){
+  canvas.width = 1086;
+  canvas.height = 1448;
+}
+resize();
 
-    if (test.length > maxChars) {
-      lines.push(line);
-      line = w;
-    } else {
-      line = test;
-    }
+let particles = Array.from({length:40},()=>({
+  x:Math.random()*1086,
+  y:Math.random()*1448,
+  r:Math.random()*6+2,
+  dx:(Math.random()-0.5)*1,
+  dy:(Math.random()-0.5)*1
+}));
+
+function animate(){
+  ctx.clearRect(0,0,1086,1448);
+
+  for(let p of particles){
+    p.x += p.dx;
+    p.y += p.dy;
+
+    if(p.x<0||p.x>1086) p.dx*=-1;
+    if(p.y<0||p.y>1448) p.dy*=-1;
+
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle="rgba(255,255,255,0.15)";
+    ctx.fill();
   }
 
-  if (line) lines.push(line);
-  return lines;
+  requestAnimationFrame(animate);
 }
+animate();
 
-function render() {
-  const header = document.getElementById("header").value;
-  const pesan = document.getElementById("pesan").value;
-  const sender = document.getElementById("sender").value;
-  const date = document.getElementById("date").value;
-  const time = document.getElementById("time").value;
+/* ================= SCRAPER LOGIC (1:1 STYLE) ================= */
 
-  const canvas = document.getElementById("canvas");
-
-  // ================= HEADER (FIXED fake bold, no stacking bug)
-  const headerBox = document.getElementById("headerBox");
-  headerBox.innerHTML = "";
-
-  const baseHeader = document.createElement("div");
-  baseHeader.style.position = "relative";
-  baseHeader.style.fontSize = "34px";
-  baseHeader.style.fontWeight = "900";
-  baseHeader.style.color = "#E8F0F0";
-  baseHeader.style.textAlign = "center";
-  baseHeader.innerText = header;
-
-  headerBox.appendChild(baseHeader);
-
-  // ================= BODY (AUTO SCALE LIKE CANVAS)
-  const pesanBox = document.getElementById("pesanBox");
-
-  const lines = wrapText(pesan, 42);
-
-  // auto font size logic (mirip getFitFontSize)
-  let fontSize = 22;
-  const maxLines = 10;
-
-  if (lines.length > maxLines) {
-    fontSize = 16;
-  } else if (lines.length > 6) {
-    fontSize = 18;
+function wrap(text, max=38){
+  const words=text.split(" ");
+  let line="",out=[];
+  for(let w of words){
+    let test=line?line+" "+w:w;
+    if(test.length>max){ out.push(line); line=w; }
+    else line=test;
   }
-
-  pesanBox.style.fontSize = fontSize + "px";
-  pesanBox.style.lineHeight = (fontSize * 1.4) + "px";
-
-  pesanBox.innerHTML = lines.map(l => `<div>${l}</div>`).join("");
-
-  // ================= FOOTER (FIXED positioning relative to body)
-  const infoBox = document.getElementById("infoBox");
-
-  infoBox.style.position = "absolute";
-
-  // penting: jangan bottom fixed, tapi relative dari content
-  const baseTop = 480 - 120; // bukan hard bottom lagi
-
-  infoBox.style.top = baseTop + "px";
-  infoBox.style.left = "20px";
-  infoBox.style.right = "20px";
-
-  infoBox.innerHTML = `
-    <div>Dari: ${sender}</div>
-    <div>${date} • ${time}</div>
-  `;
+  if(line) out.push(line);
+  return out;
 }
 
-async function download() {
-  const el = document.getElementById("canvas");
+function render(){
 
-  const canvas = await html2canvas(el, {
-    useCORS: true,
-    scale: 2
+  const HEADER={
+    text:document.getElementById("header").value
+  };
+
+  const PESAN=document.getElementById("pesan").value;
+  const INFO={
+    sender:document.getElementById("sender").value,
+    date:document.getElementById("date").value,
+    time:document.getElementById("time").value
+  };
+
+  /* HEADER (exact position like scraper) */
+  document.getElementById("headerBox").innerText=HEADER.text;
+
+  /* PESAN (wrap like canvas logic simplified) */
+  const lines=wrap(PESAN,45);
+  document.getElementById("pesanBox").innerHTML=
+    lines.map(l=>`<div>${l}</div>`).join("");
+
+  /* INFO */
+  document.getElementById("infoBox").innerHTML=
+    `Dari: ${INFO.sender}<br>${INFO.date}<br>${INFO.time}`;
+}
+
+/* ================= EXPORT ================= */
+async function download(){
+  const el=document.getElementById("stage");
+
+  const canvas=await html2canvas(el,{
+    scale:2,
+    useCORS:true
   });
 
-  const link = document.createElement("a");
-  link.download = "nokia-quote.png";
-  link.href = canvas.toDataURL("image/png");
-  link.click();
+  const a=document.createElement("a");
+  a.download="nokia-quote.png";
+  a.href=canvas.toDataURL("image/png");
+  a.click();
 }
 
 render();
 </script>
+
 </body>
 </html>
