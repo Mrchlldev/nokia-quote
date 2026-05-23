@@ -127,15 +127,16 @@ function render() {
 const headerBox = document.getElementById("headerBox");
 headerBox.innerHTML = "";
 
+// posisi & ukuran DIAM sama seperti versi sebelumnya
 const baseHeader = document.createElement("div");
 
 baseHeader.style.position = "absolute";
-baseHeader.style.top = "50px";        // 👈 sebelumnya terlalu atas, sekarang turun sedikit dari default
+baseHeader.style.top = "30px";   // 🔒 tetap seperti sebelumnya
 baseHeader.style.left = "0";
 baseHeader.style.width = "100%";
 
-baseHeader.style.fontSize = "40px";   // 👈 naik sedikit dari 34 → biar lebih “nokia feel”
-baseHeader.style.fontWeight = "700";
+baseHeader.style.fontSize = "34px";  // 🔒 tetap
+baseHeader.style.fontWeight = "bold";
 baseHeader.style.color = "#E8F0F0";
 baseHeader.style.textAlign = "center";
 baseHeader.style.fontFamily = "NokiaFont";
