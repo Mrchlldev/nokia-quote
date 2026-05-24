@@ -5,244 +5,530 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Nokia Quote Generator</title>
 
+  <!-- GOOGLE FONTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <!-- TAILWIND -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- HTML2CANVAS -->
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
   <style>
+
     @font-face {
-      font-family: "FontHeader";
-      src: url("https://raw.githubusercontent.com/Ditzzx-vibecoder/Assets/main/Font/nokia-6000-series-medium.ttf");
+      font-family: 'Nokia';
+      src: url('https://raw.githubusercontent.com/Ditzzx-vibecoder/Assets/main/Font/nokia-6000-series-medium.ttf');
     }
-    @font-face {
-      font-family: "FontPesan";
-      src: url("https://raw.githubusercontent.com/Ditzzx-vibecoder/Assets/main/Font/nokia-6000-series-medium.ttf");
-    }
-    @font-face {
-      font-family: "FontInfo";
-      src: url("https://raw.githubusercontent.com/Ditzzx-vibecoder/Assets/main/Font/nokia-6000-series-medium.ttf");
+
+    * {
+      box-sizing: border-box;
     }
 
     body {
-      font-family: system-ui;
+      font-family: 'Space Grotesk', sans-serif;
+      background: #ffe45e;
+      background-image:
+        radial-gradient(circle at 10% 20%, #ff7b00 0 120px, transparent 120px),
+        radial-gradient(circle at 90% 10%, #000 0 100px, transparent 100px),
+        radial-gradient(circle at 90% 90%, #00d4ff 0 130px, transparent 130px),
+        radial-gradient(circle at 20% 90%, #ff00aa 0 100px, transparent 100px);
+      overflow-x: hidden;
     }
 
-    .neo {
-      border: 4px solid black;
-      box-shadow: 6px 6px 0 black;
-      border-radius: 16px;
+    .title-font {
+      font-family: 'Archivo Black', sans-serif;
     }
+
+    .neo-card {
+      background: white;
+      border: 5px solid black;
+      box-shadow: 10px 10px 0px black;
+      transition: 0.2s ease;
+    }
+
+    .neo-card:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 14px 14px 0px black;
+    }
+
+    .neo-input,
+    .neo-textarea {
+      border: 4px solid black;
+      box-shadow: 6px 6px 0px black;
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    .neo-input:focus,
+    .neo-textarea:focus {
+      transform: translate(-2px, -2px);
+      box-shadow: 10px 10px 0px black;
+    }
+
+    .neo-btn {
+      border: 4px solid black;
+      box-shadow: 6px 6px 0px black;
+      transition: 0.2s ease;
+    }
+
+    .neo-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 10px 10px 0px black;
+    }
+
+    .badge {
+      border: 3px solid black;
+      box-shadow: 4px 4px 0px black;
+    }
+
+    /* ========================= */
+    /* NOKIA CANVAS */
+    /* ========================= */
+
+    .nokia-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    #nokiaCanvas {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      aspect-ratio: 1086 / 1448;
+      overflow: hidden;
+      background-size: cover;
+      background-position: center;
+      border: 6px solid black;
+      box-shadow: 12px 12px 0px black;
+    }
+
+    .nokia-header {
+      position: absolute;
+      top: 10.7%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Nokia';
+      font-size: 50px;
+      color: #E8F0F0;
+      letter-spacing: 0px;
+      font-weight: bold;
+      image-rendering: pixelated;
+      text-shadow:
+        1px 0 #E8F0F0,
+        2px 0 #E8F0F0,
+        3px 0 #E8F0F0,
+        4px 0 #E8F0F0;
+    }
+
+    .nokia-message {
+      position: absolute;
+      top: 20.5%;
+      left: 2.8%;
+      width: 94%;
+      padding: 12px 24px;
+      font-family: 'Nokia';
+      font-size: 25px;
+      line-height: 1.65;
+      color: black;
+      white-space: pre-wrap;
+      word-break: break-word;
+      transform: scaleY(1.2);
+      transform-origin: top left;
+    }
+
+    .nokia-info {
+      position: absolute;
+      left: 2.8%;
+      bottom: 11%;
+      font-family: 'Nokia';
+      font-size: 22px;
+      line-height: 1.7;
+      transform: scaleY(1.2);
+      transform-origin: top left;
+      color: black;
+      white-space: pre-line;
+    }
+
+    .preview-label {
+      font-family: 'Archivo Black', sans-serif;
+      letter-spacing: 1px;
+    }
+
+    .download-link {
+      text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+
+      .nokia-header {
+        font-size: 34px;
+      }
+
+      .nokia-message {
+        font-size: 17px;
+      }
+
+      .nokia-info {
+        font-size: 15px;
+      }
+
+    }
+
   </style>
 </head>
+<body>
 
-<body class="bg-yellow-200">
+  <section class="min-h-screen px-6 py-14">
 
-<!-- NAVBAR -->
-<nav class="p-4 bg-white neo m-4 flex justify-between items-center">
-  <h1 class="font-bold text-xl">📟 Nokia Quote Generator</h1>
-</nav>
+    <div class="max-w-7xl mx-auto">
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+      <!-- HERO -->
+      <div class="neo-card rounded-[35px] bg-[#00ffc3] p-8 md:p-14">
 
-  <!-- INPUT CARD -->
-  <div class="bg-white neo p-4 space-y-3">
-
-    <input id="headerText" class="w-full border p-2 rounded" placeholder="Nama Header" value="Ditzzx"/>
-
-    <textarea id="pesanText" class="w-full border p-2 rounded h-40">
-Jangan pernah menyerah pada impianmu hanya karena prosesnya terasa lama dan melelahkan, karena semua yang besar selalu dimulai dari langkah kecil yang konsisten setiap harinya tanpa terkecuali meski tidak ada yang melihat perjuanganmu..
-    </textarea>
-
-    <input id="sender" class="w-full border p-2 rounded" placeholder="Sender" value="Ditzzx"/>
-
-    <input id="tanggal" class="w-full border p-2 rounded" value="02/05/2026"/>
-
-    <input id="jam" class="w-full border p-2 rounded" value="11:28"/>
-
-    <button onclick="render()" class="bg-black text-white px-4 py-2 rounded w-full">
-      Generate
-    </button>
-
-    <button onclick="downloadImage()" class="bg-green-600 text-white px-4 py-2 rounded w-full">
-      Download PNG
-    </button>
-
-  </div>
-
-  <!-- RESULT CARD -->
-  <div class="bg-white neo p-4 flex justify-center items-center">
-
-    <div id="canvasWrap" class="relative"
-      style="width: 360px; transform: scale(0.4); transform-origin: top left;">
-
-      <!-- SIMULASI CANVAS 1086x1448 -->
-      <div id="canvas"
-        style="
-          width:1086px;
-          height:1448px;
-          position:relative;
-          overflow:hidden;
-          background:url('https://raw.githubusercontent.com/Ditzzx-vibecoder/Assets/main/Image/file_00000000a9f47208a295c9c984f92b7a.jpeg');
-          background-size:cover;
-        ">
-
-        <!-- HEADER -->
-        <div id="header"
-          style="
-            position:absolute;
-            left:543px;
-            top:200px;
-            transform:translate(-50%,-50%);
-            font-family:FontHeader;
-            font-size:130px;
-            color:#E8F0F0;
-          ">
+        <div class="badge inline-block rounded-full bg-white px-5 py-2 font-black mb-6">
+          📱 Nokia 3310 Generator
         </div>
 
-        <!-- PESAN -->
-        <div id="pesan"
-          style="
-            position:absolute;
-            left:30px;
-            top:300px;
-            width:1026px;
-            font-family:FontPesan;
-            color:black;
-            white-space:pre-wrap;
-          ">
+        <h1 class="title-font text-4xl md:text-7xl leading-tight">
+          Nokia Quote <br>
+          Generator
+        </h1>
+
+        <p class="mt-6 text-lg md:text-2xl font-medium max-w-3xl">
+          Buat quote Nokia jadul aesthetic seperti HP Nokia 3310 asli
+          menggunakan HTML2Canvas dengan desain pixel-perfect.
+        </p>
+
+      </div>
+
+      <!-- CONTENT -->
+      <div class="grid xl:grid-cols-2 gap-10 mt-10">
+
+        <!-- LEFT -->
+        <div class="neo-card rounded-[35px] p-8 bg-white">
+
+          <div class="badge inline-block rounded-full bg-[#ffe45e] px-4 py-2 font-black mb-6">
+            ✏️ Edit Quote
+          </div>
+
+          <div class="space-y-6">
+
+            <div>
+              <label class="block font-black text-xl mb-3">
+                Nama Header
+              </label>
+
+              <input
+                id="headerInput"
+                type="text"
+                value="lannnk"
+                class="neo-input w-full rounded-2xl px-5 py-4 text-lg font-bold"
+              />
+            </div>
+
+            <div>
+              <label class="block font-black text-xl mb-3">
+                Isi Pesan
+              </label>
+
+              <textarea
+                id="messageInput"
+                rows="8"
+                class="neo-textarea w-full rounded-2xl px-5 py-4 text-lg font-bold"
+              >MBG, Mas Bahlil Ganteng, buah apa yang paling manis? buah lil, tambah ganteng, my little bolu ketan</textarea>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-5">
+
+              <div>
+                <label class="block font-black text-xl mb-3">
+                  Pengirim
+                </label>
+
+                <input
+                  id="senderInput"
+                  type="text"
+                  value="lannnk"
+                  class="neo-input w-full rounded-2xl px-5 py-4 text-lg font-bold"
+                />
+              </div>
+
+              <div>
+                <label class="block font-black text-xl mb-3">
+                  Tanggal
+                </label>
+
+                <input
+                  id="dateInput"
+                  type="text"
+                  value="23/05/2026"
+                  class="neo-input w-full rounded-2xl px-5 py-4 text-lg font-bold"
+                />
+              </div>
+
+            </div>
+
+            <div>
+              <label class="block font-black text-xl mb-3">
+                Jam
+              </label>
+
+              <input
+                id="timeInput"
+                type="text"
+                value="08.30"
+                class="neo-input w-full rounded-2xl px-5 py-4 text-lg font-bold"
+              />
+            </div>
+
+            <div class="flex flex-wrap gap-4 pt-2">
+
+              <button
+                onclick="generateQuote()"
+                class="neo-btn bg-black text-white px-8 py-4 rounded-2xl text-lg font-black"
+              >
+                ⚡ Generate
+              </button>
+
+              <button
+                onclick="downloadImage()"
+                class="neo-btn bg-[#00ffc3] px-8 py-4 rounded-2xl text-lg font-black"
+              >
+                📥 Download
+              </button>
+
+            </div>
+
+          </div>
+
         </div>
 
-        <!-- INFO -->
-        <div id="info"
-          style="
-            position:absolute;
-            left:30px;
-            top:980px;
-            font-family:FontInfo;
-            color:black;
-            font-size:48px;
-          ">
+        <!-- RIGHT -->
+        <div>
+
+          <div class="neo-card rounded-[35px] bg-white p-8">
+
+            <div class="flex items-center justify-between gap-4 mb-6 flex-wrap">
+
+              <div class="badge bg-[#ff90e8] rounded-full px-4 py-2 font-black">
+                👀 Preview
+              </div>
+
+              <div class="preview-label text-xl">
+                1086 × 1448
+              </div>
+
+            </div>
+
+            <div class="nokia-wrapper">
+
+              <!-- NOKIA SCREEN -->
+              <div
+                id="nokiaCanvas"
+                style="
+                  background-image:url('https://raw.githubusercontent.com/Ditzzx-vibecoder/Assets/main/Image/file_00000000a9f47208a295c9c984f92b7a.jpeg');
+                "
+              >
+
+                <div
+                  id="headerPreview"
+                  class="nokia-header"
+                >
+                  lannnk
+                </div>
+
+                <div
+                  id="messagePreview"
+                  class="nokia-message"
+                >
+MBG, Mas Bahlil Ganteng, buah apa yang paling manis? buah lil, tambah ganteng, my little bolu ketan
+                </div>
+
+                <div
+                  id="infoPreview"
+                  class="nokia-info"
+                >
+Dari:
+lannnk
+23/05/2026
+08.30
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
         </div>
 
       </div>
+
+      <!-- FEATURES -->
+      <section class="mt-20">
+
+        <div class="text-center mb-12">
+          <h2 class="title-font text-4xl md:text-6xl">
+            Features
+          </h2>
+        </div>
+
+        <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
+
+          <div class="neo-card rounded-[25px] p-6 bg-[#ff8a00]">
+            <div class="text-5xl mb-4">⚡</div>
+
+            <h3 class="title-font text-2xl mb-3">
+              Fast
+            </h3>
+
+            <p class="font-medium">
+              Generate gambar Nokia hanya dalam hitungan detik.
+            </p>
+          </div>
+
+          <div class="neo-card rounded-[25px] p-6 bg-[#80d8ff]">
+            <div class="text-5xl mb-4">🎨</div>
+
+            <h3 class="title-font text-2xl mb-3">
+              Accurate
+            </h3>
+
+            <p class="font-medium">
+              Layout dibuat semirip mungkin dengan tampilan Nokia asli.
+            </p>
+          </div>
+
+          <div class="neo-card rounded-[25px] p-6 bg-[#7cff7c]">
+            <div class="text-5xl mb-4">📱</div>
+
+            <h3 class="title-font text-2xl mb-3">
+              Responsive
+            </h3>
+
+            <p class="font-medium">
+              Support HP, tablet, maupun desktop tanpa pecah.
+            </p>
+          </div>
+
+          <div class="neo-card rounded-[25px] p-6 bg-[#ff7ad9]">
+            <div class="text-5xl mb-4">🖼️</div>
+
+            <h3 class="title-font text-2xl mb-3">
+              HD Export
+            </h3>
+
+            <p class="font-medium">
+              Download hasil PNG kualitas tinggi menggunakan html2canvas.
+            </p>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="mt-24 pb-10">
+
+        <div class="neo-card bg-black text-white rounded-[35px] p-8 text-center">
+
+          <h3 class="title-font text-3xl">
+            Nokia Quote Generator
+          </h3>
+
+          <p class="mt-4 text-lg opacity-90">
+            Built with HTML, Tailwind CSS, Javascript & html2canvas
+          </p>
+
+        </div>
+
+      </footer>
+
     </div>
-  </div>
 
-</div>
+  </section>
 
-<!-- FOOTER -->
-<footer class="m-4 p-4 bg-white neo text-center">
-  Author: <b>Marcellino F.A</b>
-</footer>
+  <script>
 
-<script>
-const WIDTH = 1086;
-const HEIGHT = 1448;
+    const headerInput = document.getElementById('headerInput');
+    const messageInput = document.getElementById('messageInput');
+    const senderInput = document.getElementById('senderInput');
+    const dateInput = document.getElementById('dateInput');
+    const timeInput = document.getElementById('timeInput');
 
-function setHeader(text){
-  const el = document.getElementById("header");
-  el.innerHTML = "";
+    const headerPreview = document.getElementById('headerPreview');
+    const messagePreview = document.getElementById('messagePreview');
+    const infoPreview = document.getElementById('infoPreview');
 
-  for (let i = 0; i <= 4; i++) {
-    const span = document.createElement("div");
-    span.innerText = text;
-    span.style.position = "absolute";
-    span.style.left = i + "px";
-    span.style.top = "0px";
-    el.appendChild(span);
-  }
-}
+    function autoResizeText() {
 
-function wrapText(text, maxWidth, fontSize){
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d");
-  ctx.font = fontSize + "px FontPesan";
+      const text = messageInput.value.trim();
 
-  const words = text.split(" ");
-  let line = "";
-  const result = [];
+      let size = 25;
 
-  for (let w of words) {
-    const test = line + " " + w;
-    if (ctx.measureText(test).width > maxWidth && line) {
-      result.push(line);
-      line = w;
-    } else {
-      line = test;
+      if (text.length > 250) {
+        size = 18;
+      } else if (text.length > 180) {
+        size = 20;
+      } else if (text.length > 120) {
+        size = 22;
+      }
+
+      messagePreview.style.fontSize = size + 'px';
+
     }
-  }
 
-  if (line) result.push(line);
-  return result;
-}
+    function generateQuote() {
 
-function fitFontSize(textLines, maxHeight){
-  let fontSize = 63;
-  const lineHeightRatio = 110 / 63;
+      headerPreview.innerText =
+        headerInput.value || 'lannnk';
 
-  while (fontSize > 10) {
-    const lineHeight = fontSize * lineHeightRatio;
-    const wrapped = textLines.flatMap(l =>
-      wrapText(l, 1026, fontSize)
-    );
+      messagePreview.innerText =
+        messageInput.value || '-';
 
-    const totalH = wrapped.length * lineHeight;
+      infoPreview.innerText =
+`Dari:
+${senderInput.value || '-'}
+${dateInput.value || '-'}
+${timeInput.value || '-'}`;
 
-    if (totalH <= maxHeight) break;
-    fontSize--;
-  }
+      autoResizeText();
 
-  return fontSize;
-}
+    }
 
-function render(){
-  const header = document.getElementById("headerText").value;
-  const pesanRaw = document.getElementById("pesanText").value;
-  const sender = document.getElementById("sender").value;
-  const tanggal = document.getElementById("tanggal").value;
-  const jam = document.getElementById("jam").value;
+    async function downloadImage() {
 
-  setHeader(header);
+      generateQuote();
 
-  // PESAN
-  const pesanEl = document.getElementById("pesan");
-  const lines = pesanRaw.split("\n");
+      const canvasTarget =
+        document.getElementById('nokiaCanvas');
 
-  const fitSize = fitFontSize(lines, 700);
-  const lineHeight = fitSize * (110/63);
+      const canvas = await html2canvas(canvasTarget, {
+        scale: 4,
+        useCORS: true,
+        backgroundColor: null
+      });
 
-  const wrapped = lines.flatMap(l =>
-    wrapText(l, 1026, fitSize)
-  );
+      const image = canvas.toDataURL('image/png');
 
-  pesanEl.style.fontSize = fitSize + "px";
-  pesanEl.innerHTML = wrapped.map(l => `<div>${l}</div>`).join("");
+      const link = document.createElement('a');
 
-  // INFO
-  document.getElementById("info").innerHTML = `
-    Dari:<br>
-    ${sender}<br>
-    ${tanggal}<br>
-    ${jam}
-  `;
-}
+      link.href = image;
 
-async function downloadImage(){
-  const el = document.getElementById("canvas");
+      link.download = 'nokia-quote.png';
 
-  const canvas = await html2canvas(el, {
-    scale: 2,
-    useCORS: true
-  });
+      link.click();
 
-  const link = document.createElement("a");
-  link.download = "nokia-quote.png";
-  link.href = canvas.toDataURL();
-  link.click();
-}
+    }
 
-// initial render
-render();
-</script>
+    generateQuote();
+
+  </script>
 
 </body>
 </html>
